@@ -22,7 +22,9 @@ require __DIR__ . "/src/Thumbnail.php";
 global $UpperCodShortcodeData;
 
 $UpperCodShortcodeData = [
-    "date" => "date",
+    "date" => function ($option, $value) {
+        return wp_date($option, is_numeric($value) ? $value : strtotime($value));
+    },
     "json" => function ($option, $value) {
         return JSON_ENCODE($value);
     },

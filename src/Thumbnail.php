@@ -4,16 +4,21 @@ class Thumbnail
 {
     public function __construct($post)
     {
-        $this->id = get_post_thumbnail_id($post);
-        $this->meta = wp_get_attachment_metadata($this->id);
+        $this->ID = get_post_thumbnail_id($post);
     }
     public function __toString()
     {
-        return wp_get_attachment_image_url($this->id, false);
+        return wp_get_attachment_image_url($this->ID, false);
     }
-    public function __get($size)
+    public function __get($type)
     {
-        return wp_get_attachment_image_url($this->id, $size);
+        if ($type === "meta") {
+            return wp_get_attachment_metadata($this->ID);
+        }
+        if ($type === "id") {
+            return $this->ID;
+        }
+        return wp_get_attachment_image_url($this->ID, $type);
     }
 
 }

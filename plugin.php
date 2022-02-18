@@ -51,7 +51,7 @@ $UpperCodShortcodeData = [
  * [data title] will get from the concurrent object the `title` property
  * [data relation.title] will get from the concurrent object the `relation` property and then `title` only if it is of type object.
  */
-add_shortcode('data', function ($attrs) {
+add_shortcode("data", function ($attrs) {
     global $UpperCodShortcodeData;
     $data = "";
     $i = 0;

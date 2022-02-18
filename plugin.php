@@ -1,4 +1,4 @@
-<?php namespace UpperCodData;
+<?php namespace UpperCodShortcodeData;
 
 /**
  * Plugin Name:       UpperCod - Shortcode data
@@ -16,67 +16,35 @@
 
 defined("ABSPATH") || exit;
 
-global $UpperCodData;
+require __DIR__ . "/src/getData.php";
+require __DIR__ . "/src/Thumbnail.php";
 
-$UpperCodData = [
+global $UpperCodShortcodeData;
+
+$UpperCodShortcodeData = [
     "date" => "date",
-    "json" => function (string $option, string $value) {
+    "json" => function ($option, $value) {
         return JSON_ENCODE($value);
     },
-    "md5" => function (string $option, string $value) {
+    "md5" => function ($option, $value) {
         return md5($value);
     },
-    "striptags" => function (string $option, string $value) {
+    "striptags" => function ($option, $value) {
         return striptags($value);
     },
-    "htmlencode" => function (string $option, string $value) {
+    "htmlencode" => function ($option, $value) {
         return htmlentities($value);
     },
-    "urlencode" => function (string $option, string $value) {
+    "urlencode" => function ($option, $value) {
         return urlencode($value);
     },
-    "base64encode" => function (string $option, string $value) {
+    "base64encode" => function ($option, $value) {
         return base64_encode($value);
     },
-    "slug" => function (string $option, string $value) {
+    "slug" => function ($option, $value) {
         return sanitize_title($value);
     },
 ];
-
-/**
- * @param string $field field to retrieve from concurrent object
- */
-function getData(string $field, $base = null)
-{
-    if (!$base) {
-        global $post;
-        $base = $post;
-    }
-
-    $current = "";
-    $path = preg_split("/\./", $field);
-    foreach ($path as $i => $value) {
-        if (!$i) {
-            if (function_exists("get_field")) {
-                $current = get_field($value, $base->ID);
-                if ($current) {
-                    continue;
-                }
-            }
-            $current = $base->{$value} ?? $base->{"post_{$value}"};
-        } elseif ($current instanceof \WP_Post) {
-            return getData(join(".", array_slice($path, $i)), $current);
-        } else if (is_object($current)) {
-            $current = $current->{$value};
-        } else if (is_array($current)) {
-            $current = $current[$value];
-        } else {
-            return $current;
-        }
-    }
-
-    return $current;
-}
 
 /**
  * Retrieve data from the concurrent object and apply filters based on the shortcode arguments
@@ -84,7 +52,7 @@ function getData(string $field, $base = null)
  * [data relation.title] will get from the concurrent object the `relation` property and then `title` only if it is of type object.
  */
 add_shortcode('data', function ($attrs) {
-    global $oxyslab_data_utils;
+    global $UpperCodShortcodeData;
     $data = "";
     $i = 0;
     foreach ($attrs as $key => $value) {
@@ -92,9 +60,9 @@ add_shortcode('data', function ($attrs) {
         // only the first index will go into getData
         if (!$i) {
             $data = getData($prop);
-        } else if ($oxyslab_data_utils[$prop]) {
+        } else if ($UpperCodShortcodeData[$prop]) {
             // the following indices are analyzed by filters
-            $data = $oxyslab_data_utils[$prop]($value, $data);
+            $data = $UpperCodShortcodeData[$prop]($value, $data);
         }
         $i++;
     }

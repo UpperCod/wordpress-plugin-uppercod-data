@@ -1,4 +1,4 @@
-# UpperCodData
+# UpperCodShortCodeData
 
 This plugin allows access through shortcode to information of the shared concurrent object
 for wordpress, by default $post.
@@ -6,7 +6,7 @@ for wordpress, by default $post.
 ## Syntax
 
 ```
-[date <property> [...filters] ]
+[$ <property> [...filters] ]
 ```
 
 1. `<property>`: Property to access of the current object.
@@ -17,48 +17,56 @@ for wordpress, by default $post.
 get page title
 
 ```txt
-[data title]
+[$ title]
 ```
 
 get page date
 
 ```txt
-[data date]
+[$ date]
 ```
 
 get page date and apply filter
 
 ```txt
-[data date date="Y"]
+[$ date date="Y"]
 ```
 
 ## Default filters
 
 ```php
 [
-    "date" => "date",
-    "json" => function (string $option, string $value) {
+     "date" => function ($option, $value) {
+        return wp_date($option, is_numeric($value) ? $value : strtotime($value));
+    },
+    "json" => function ($option, $value) {
         return JSON_ENCODE($value);
     },
-    "md5" => function (string $option, string $value) {
+    "md5" => function ($option, $value) {
         return md5($value);
     },
-    "striptags" => function (string $option, string $value) {
+    "striptags" => function ($option, $value) {
         return striptags($value);
     },
-    "htmlencode" => function (string $option, string $value) {
+    "htmlencode" => function ($option, $value) {
         return htmlentities($value);
     },
-    "urlencode" => function (string $option, string $value) {
+    "urlencode" => function ($option, $value) {
         return urlencode($value);
     },
-    "base64encode" => function (string $option, string $value) {
+    "base64encode" => function ($option, $value) {
         return base64_encode($value);
     },
-    "slug" => function (string $option, string $value) {
+    "slug" => function ($option, $value) {
         return sanitize_title($value);
+    },
+    "numberformat" => function ($option, $value) {
+        return number_format_i18n($value);
+    },
+    "filter" => function ($option, $value) {
+        return apply_filter($option, $value);
     },
 ];
 ```
 
-You can add more filters by accessing the global variable `$UpperCodData`.
+You can add more filters by accessing the global variable `$UpperCodShortcodeData`.

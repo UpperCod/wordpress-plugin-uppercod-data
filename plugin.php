@@ -1,7 +1,7 @@
-<?php namespace UpperCodShortcodeData;
+<?php namespace UpperCodShortCodeData;
 
 /**
- * Plugin Name:       UpperCod - Shortcode data
+ * Plugin Name:       UpperCod - ShortCode Data.
  * Plugin URI:        http://github.com/uppercod/wordpress-plugin-uppercod-data
  * Description:       shortcode that accelerates the reuse of information..
  * Version:           1.0.0
@@ -10,8 +10,6 @@
  * Author URI:        http://github.com/uppercod
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       UpperCod
- * Domain Path:       /languages
  */
 
 defined("ABSPATH") || exit;
@@ -19,9 +17,9 @@ defined("ABSPATH") || exit;
 require __DIR__ . "/src/getData.php";
 require __DIR__ . "/src/Thumbnail.php";
 
-global $UpperCodShortcodeData;
+global $UpperCodShortCodeData;
 
-$UpperCodShortcodeData = [
+$UpperCodShortCodeData = [
     "date" => function ($option, $value) {
         return wp_date($option, is_numeric($value) ? $value : strtotime($value));
     },
@@ -46,15 +44,21 @@ $UpperCodShortcodeData = [
     "slug" => function ($option, $value) {
         return sanitize_title($value);
     },
+    "numberformat" => function ($option, $value) {
+        return number_format_i18n($value);
+    },
+    "filter" => function ($option, $value) {
+        return apply_filter($option, $value);
+    },
 ];
 
 /**
  * Retrieve data from the concurrent object and apply filters based on the shortcode arguments
- * [data title] will get from the concurrent object the `title` property
- * [data relation.title] will get from the concurrent object the `relation` property and then `title` only if it is of type object.
+ * [$ title] will get from the concurrent object the `title` property
+ * [$ relation.title] will get from the concurrent object the `relation` property and then `title` only if it is of type object.
  */
-add_shortcode("data", function ($attrs) {
-    global $UpperCodShortcodeData;
+add_shortcode("$", function ($attrs) {
+    global $UpperCodShortCodeData;
     $data = "";
     $i = 0;
     foreach ($attrs as $key => $value) {
@@ -62,9 +66,9 @@ add_shortcode("data", function ($attrs) {
         // only the first index will go into getData
         if (!$i) {
             $data = getData($prop);
-        } else if ($UpperCodShortcodeData[$prop]) {
+        } else if ($UpperCodShortCodeData[$prop]) {
             // the following indices are analyzed by filters
-            $data = $UpperCodShortcodeData[$prop]($value, $data);
+            $data = $UpperCodShortCodeData[$prop]($value, $data);
         }
         $i++;
     }

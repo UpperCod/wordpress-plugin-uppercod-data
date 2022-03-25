@@ -1,7 +1,7 @@
 <?php namespace UpperCodShortCodeData;
 
 /**
- * Plugin Name:       UpperCod - ShortCode Data.
+ * Plugin Name:       UpperCod - ShortCode Data
  * Plugin URI:        http://github.com/uppercod/wp-uppercod-data
  * Description:       shortcode that accelerates the reuse of information.
  * Version:           1.0.0

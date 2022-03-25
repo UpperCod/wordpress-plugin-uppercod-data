@@ -2,8 +2,8 @@
 
 /**
  * Plugin Name:       UpperCod - ShortCode Data.
- * Plugin URI:        http://github.com/uppercod/wordpress-plugin-uppercod-data
- * Description:       shortcode that accelerates the reuse of information..
+ * Plugin URI:        http://github.com/uppercod/wp-uppercod-data
+ * Description:       shortcode that accelerates the reuse of information.
  * Version:           1.0.0
  * Requires PHP:      7.2
  * Author:            UpperCod

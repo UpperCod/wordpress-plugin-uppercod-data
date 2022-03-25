@@ -3,6 +3,10 @@
 This plugin allows access through shortcode to information of the shared concurrent object
 for wordpress, by default $post.
 
+## Installation
+
+click on the `Code` button and then click on `Download ZIP` and install as a plugin in wordpress.
+
 ## Syntax
 
 ```
